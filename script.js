@@ -94,17 +94,22 @@ function setupTouchEvents(carousel) {
   let touchStartY = 0;
   let touchEndY = 0;
   let startScrollPos = 0;
+  let isScrolling = false;
   
   carousel.addEventListener('touchstart', function(e) {
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
     startScrollPos = carousel.scrollLeft;
     
-    // スクロールをより滑らかにする
+    // スクロールをよりスムーズにする - スクロール中はCSS transitionを無効化
     carousel.style.scrollBehavior = 'auto';
+    isScrolling = false;
   }, { passive: true });
   
   carousel.addEventListener('touchmove', function(e) {
+    // スクロール中フラグを立てる
+    isScrolling = true;
+    
     touchEndX = e.changedTouches[0].screenX;
     touchEndY = e.changedTouches[0].screenY;
     
@@ -113,24 +118,35 @@ function setupTouchEvents(carousel) {
     
     // 水平方向の動きが大きい場合は水平スクロールに集中
     if (Math.abs(diffX) > Math.abs(diffY)) {
+      // スクロール位置を直接操作して遅延を減らす
       carousel.scrollLeft = startScrollPos + diffX;
+      // イベントのデフォルト動作をキャンセル
+      e.preventDefault();
     }
-  }, { passive: true });
+  }, { passive: false });
   
   carousel.addEventListener('touchend', function() {
-    carousel.style.scrollBehavior = 'smooth';
-    
-    const diffX = touchStartX - touchEndX;
-    const swipeThreshold = 50;
-    
-    if (Math.abs(diffX) > swipeThreshold) {
-      const direction = diffX > 0 ? 1 : -1;
-      moveCarousel(direction);
-    } else {
-      // スナップ処理（一番近いカードにスナップ）
-      snapToNearestCard(carousel);
-    }
-  }, { passive: true });
+    // スクロール動作の後、少し遅延を入れてからスムーズスクロールを有効に
+    setTimeout(() => {
+      carousel.style.scrollBehavior = 'smooth';
+      
+      // タッチ操作が終了し、実際にスクロールが行われた場合
+      if (isScrolling) {
+        const diffX = touchStartX - touchEndX;
+        const swipeThreshold = 50;
+        
+        if (Math.abs(diffX) > swipeThreshold) {
+          const direction = diffX > 0 ? 1 : -1;
+          moveCarousel(direction);
+        } else {
+          // スナップ処理（一番近いカードにスナップ）
+          snapToNearestCard(carousel);
+        }
+        
+        isScrolling = false;
+      }
+    }, 10);
+  });
 }
 
 // 一番近いカードの位置にスナップする

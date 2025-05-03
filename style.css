@@ -692,10 +692,16 @@ nav a:hover::after {
   gap: 25px;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
   padding: 15px 5px 25px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  /* GPU アクセラレーションを有効化してガクガクを抑制 */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  /* モバイルでのレンダリングを改善 */
+  will-change: scroll-position;
 }
 
 .carousel::-webkit-scrollbar {
@@ -715,8 +721,12 @@ nav a:hover::after {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: var(--transition);
+  /* スムーズなトランジション */
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, background-color 0.3s ease-out;
   border-top: 4px solid transparent;
+  /* GPU アクセラレーションを有効化 */
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .worry-card:hover {
@@ -1835,29 +1845,25 @@ footer::before {
   }
   
   .carousel-wrapper {
-    padding: 0 30px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: 0 40px;
+    width: calc(100% + 40px);
+    overflow: hidden; /* 親要素のオーバーフローを隠す */
   }
   
-  .carousel-guide {
-    font-size: 0.95rem;
-    width: 90%;
+  .carousel {
+    /* モバイルでのスクロール時のパフォーマンス向上 */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto; /* JavaScriptで制御しているのでCSSはautoに */
+    width: calc(100% + 20px); /* 少し幅を広げて、右端の要素がより見えるように */
   }
   
   .worry-card {
-    width: 280px;
+    width: 280px; /* モバイルでは少し小さく */
     padding: 25px 20px;
-  }
-  
-  .worry-action {
-    padding: 25px 20px;
-  }
-  
-  .worry-lead {
-    font-size: 1.25rem;
-  }
-  
-  .diagnosis-type {
-    padding: 25px 22px;
+    /* モバイルではホバー効果よりもスクロール性能を優先 */
+    transition: transform 0.2s ease-out;
   }
   
   .benefit-list li {
