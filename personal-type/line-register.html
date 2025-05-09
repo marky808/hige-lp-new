@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KZGT7CGS');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <title>LINE友達登録 - 診断結果を受け取る</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --line-color: #06C755;
+      --line-dark: #05a649;
+      --background-color: #eef2f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #e0f7e9, #c8f0d8);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .line-container {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      max-width: 600px;
+      width: 90%;
+      padding: 30px;
+      text-align: center;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .line-icon {
+      font-size: 4rem;
+      color: var(--line-color);
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: var(--line-color);
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    .subtitle {
+      color: #555;
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+    }
+    .description {
+      color: #666;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .line-benefits {
+      background-color: #f5f5f5;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+    .line-benefits h3 {
+      color: var(--line-dark);
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    .line-benefits ul {
+      padding-left: 20px;
+    }
+    .line-benefits li {
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .line-button {
+      background-color: var(--line-color);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+      margin-bottom: 15px;
+    }
+    .line-button:hover {
+      background-color: var(--line-dark);
+      transform: translateY(-3px);
+    }
+    .line-button i {
+      font-size: 1.4rem;
+      margin-right: 8px;
+    }
+    .complete-button {
+      display: none;
+      background-color: #555;
+    }
+    .complete-button:hover {
+      background-color: #444;
+    }
+    .already-registered {
+      color: #777;
+      font-size: 0.9rem;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .already-registered:hover {
+      color: #555;
+    }
+    /* QRコード用のスタイル追加 */
+    .qr-container {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      margin-bottom: 10px;
+    }
+    .line-id {
+      font-weight: bold;
+      color: var(--line-dark);
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZGT7CGS"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <div class="line-container">
+    <i class="fab fa-line line-icon"></i>
+    <h1>あと一歩！</h1>
+    <p class="subtitle">診断結果を受け取るにはLINE登録が必要です</p>
+    <div class="description">
+      あなたのパーソナルタイプ診断の結果は生成されました。結果を確認するには、当サービスの公式LINE友だち登録をお願いします。
+    </div>
+    <div class="line-benefits">
+      <h3>LINE登録のメリット</h3>
+      <ul>
+        <li>診断結果の詳細な解説を受け取れます</li>
+        <li>あなたのタイプに特化したアドバイスを定期配信</li>
+        <li>無料でのフォローアップ相談が可能に</li>
+        <li>最新の診断ツールや役立つコンテンツをお届け</li>
+      </ul>
+    </div>
+    
+    <!-- QRコードとLINE ID追加 -->
+    <div class="qr-container">
+      <p>以下のQRコードをスキャンするか、LINE IDで検索してください</p>
+      <img src="./images/hige-qr.png" alt="LINE公式アカウントQRコード" class="qr-code">
+      <p class="line-id">LINE ID: @money_adviserjp</p>
+    </div>
+    
+    <button id="lineAddButton" class="line-button">
+      <i class="fab fa-line"></i> LINE友だち追加
+    </button>
+    <button id="lineCompleteButton" class="line-button complete-button">
+      <i class="fas fa-check"></i> 登録完了！結果を見る
+    </button>
+    <div>
+      <a href="#" class="already-registered" id="alreadyRegistered">すでに登録されている方はこちら</a>
+    </div>
+  </div>
+  
+  <script>
+    // LocalStorageキー
+    const LINE_REGISTERED_KEY = 'line_registered';
+    
+    // LINE友達追加ボタン
+    document.getElementById('lineAddButton').addEventListener('click', function() {
+      // LINE友達追加のURLを開く（実際のLINE URLに変更）
+      window.open('https://line.me/R/ti/p/@money_adviserjp', '_blank');
+      
+      // 8秒後に完了ボタンを表示
+      setTimeout(() => {
+        document.getElementById('lineCompleteButton').style.display = 'inline-flex';
+      }, 8000);
+    });
+    
+    // 登録完了ボタンのイベントリスナー
+    document.getElementById('lineCompleteButton').addEventListener('click', function() {
+      // LINE登録済みとしてマーク
+      localStorage.setItem(LINE_REGISTERED_KEY, 'registered');
+      // 結果ページへ
+      window.location.href = 'result.html';
+    });
+    
+    // すでに登録済みリンク
+    document.getElementById('alreadyRegistered').addEventListener('click', function(e) {
+      e.preventDefault();
+      // LINE登録済みとしてマーク
+      localStorage.setItem(LINE_REGISTERED_KEY, 'registered');
+      // 結果ページへ
+      window.location.href = 'result.html';
+    });
+  </script>
+</body>
+</html>

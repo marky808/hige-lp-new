@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KZGT7CGS');</script>
+  <!-- End Google Tag Manager -->
+  <title>パーソナルリスク診断 - 結果</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-color: #00c300;
+      --secondary-color: #007700;
+      --background-color: #eef2f6;
+      --danger-color: #ff4136;
+      --warning-color: #ff851b;
+      --caution-color: #ffdc00;
+      --success-color: #2ecc40;
+      --cashflow-color: #00c300;
+      --insurance-color: #2196F3;
+      --investment-color: #FF9800;
+      --retirement-color: #9C27B0;
+      --tax-color: #F44336;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--background-color);
+      padding: 20px;
+      min-height: 100vh;
+      color: #333;
+    }
+    .result-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.12);
+    }
+    .result-header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .result-header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+    .result-header .date {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 20px;
+    }
+    .result-score-container {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .result-score {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 15px 0;
+      color: var(--secondary-color);
+    }
+    .gauge-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 20px;
+    }
+    .chart-container {
+      margin: 20px auto;
+      max-width: 500px;
+    }
+    .risk-level {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .risk-level.high {
+      background-color: var(--danger-color);
+    }
+    .risk-level.medium {
+      background-color: var(--warning-color);
+    }
+    .risk-level.low-med {
+      background-color: var(--caution-color);
+      color: #333;
+    }
+    .risk-level.low {
+      background-color: var(--success-color);
+    }
+    .result-analysis {
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0 30px;
+    }
+    .analysis-title {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: #444;
+      border-bottom: 2px solid #eaeaea;
+      padding-bottom: 8px;
+    }
+    .result-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 15px;
+    }
+    .recommendation-list {
+      list-style-type: none;
+      margin: 15px 0;
+    }
+    .recommendation-list li {
+      margin: 10px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+    .recommendation-list li:before {
+      content: "\f058";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: var(--primary-color);
+      position: absolute;
+      left: 0;
+    }
+    .risk-breakdown {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin: 25px 0;
+    }
+    @media (min-width: 640px) {
+      .risk-breakdown {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .risk-item {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--primary-color);
+    }
+    .risk-item h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    .risk-item .score-bar {
+      height: 8px;
+      width: 100%;
+      background-color: #eee;
+      border-radius: 4px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+    .risk-item .score-value {
+      height: 100%;
+      border-radius: 4px;
+    }
+    .risk-item .score-text {
+      font-size: 0.9rem;
+      color: #777;
+      display: flex;
+      justify-content: space-between;
+    }
+    .cta-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      box-shadow: 0 4px 12px rgba(0,195,0,0.2);
+      text-decoration: none;
+    }
+    .cta-button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-3px);
+    }
+    .cta-button i { margin-right: 8px; font-size: 1.2rem; }
+    .fade-in {
+      animation: fadeIn 0.8s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .cashflow { --category-color: var(--cashflow-color); }
+    .insurance { --category-color: var(--insurance-color); }
+    .investment { --category-color: var(--investment-color); }
+    .retirement { --category-color: var(--retirement-color); }
+    .tax { --category-color: var(--tax-color); }
+    .risk-item.cashflow { border-left-color: var(--cashflow-color); }
+    .risk-item.insurance { border-left-color: var(--insurance-color); }
+    .risk-item.investment { border-left-color: var(--investment-color); }
+    .risk-item.retirement { border-left-color: var(--retirement-color); }
+    .risk-item.tax { border-left-color: var(--tax-color); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZGT7CGS"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <div class="result-container fade-in">
+    <div class="result-header">
+      <div class="date">診断日：2025年4月25日</div>
+      <h1 id="resultTitle"></h1>
+      <div id="riskLevel" class="risk-level"></div>
+    </div>
+    
+    <div class="result-score-container">
+      <div class="gauge-container">
+        <canvas id="gaugeChart"></canvas>
+      </div>
+      <div class="result-score" id="resultScore"></div>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="radarChart"></canvas>
+    </div>
+
+    <div class="result-analysis">
+      <h2 class="analysis-title">診断結果分析</h2>
+      <div class="result-text" id="resultDescription"></div>
+      
+      <h3 class="analysis-title">おすすめの対策</h3>
+      <ul class="recommendation-list" id="recommendations">
+        <!-- JavaScriptで動的に追加 -->
+      </ul>
+    </div>
+    
+    <div class="risk-breakdown">
+      <div class="risk-item cashflow">
+        <h3>キャッシュフローリスク</h3>
+        <div class="score-bar">
+          <div class="score-value" id="cashflowRiskBar"></div>
+        </div>
+        <div class="score-text">
+          <span>低リスク</span>
+          <span id="cashflowScore"></span>
+          <span>高リスク</span>
+        </div>
+      </div>
+      
+      <div class="risk-item insurance">
+        <h3>保険リスク</h3>
+        <div class="score-bar">
+          <div class="score-value" id="insuranceRiskBar"></div>
+        </div>
+        <div class="score-text">
+          <span>低リスク</span>
+          <span id="insuranceScore"></span>
+          <span>高リスク</span>
+        </div>
+      </div>
+      
+      <div class="risk-item investment">
+        <h3>投資リスク</h3>
+        <div class="score-bar">
+          <div class="score-value" id="investmentRiskBar"></div>
+        </div>
+        <div class="score-text">
+          <span>低リスク</span>
+          <span id="investmentScore"></span>
+          <span>高リスク</span>
+        </div>
+      </div>
+      
+      <div class="risk-item retirement">
+        <h3>老後資金リスク</h3>
+        <div class="score-bar">
+          <div class="score-value" id="retirementRiskBar"></div>
+        </div>
+        <div class="score-text">
+          <span>低リスク</span>
+          <span id="retirementScore"></span>
+          <span>高リスク</span>
+        </div>
+      </div>
+      
+      <div class="risk-item tax">
+        <h3>税金リスク</h3>
+        <div class="score-bar">
+          <div class="score-value" id="taxRiskBar"></div>
+        </div>
+        <div class="score-text">
+          <span>低リスク</span>
+          <span id="taxScore"></span>
+          <span>高リスク</span>
+        </div>
+      </div>
+      
+      <div class="risk-item">
+        <h3>総合リスク</h3>
+        <div class="score-bar">
+          <div class="score-value" id="totalRiskBar"></div>
+        </div>
+        <div class="score-text">
+          <span>低リスク</span>
+          <span id="totalScore"></span>
+          <span>高リスク</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cta-section">
+      <a href="https://line.me/R/ti/p/@427cbszb" class="cta-button">
+        <i class="fab fa-line"></i>LINEに戻る
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // 現在の日付を取得
+    const today = new Date();
+    const dateStr = today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.getDate() + '日';
+    document.querySelector('.date').textContent = '診断日：' + dateStr;
+    
+    // 保存されたスコアを取得
+    const totalScore = parseInt(localStorage.getItem("riskTotalScore"), 10) || 0;
+    const maxPossibleScore = parseInt(localStorage.getItem("maxPossibleScore"), 10) || 105; // デフォルトは15問×7点=105
+    const scorePercentage = (totalScore / maxPossibleScore) * 100;
+    
+    // カテゴリー別のスコアを取得
+    let categoryScores = {};
+    try {
+      const savedCategoryScores = localStorage.getItem("riskCategoryScores");
+      if (savedCategoryScores) {
+        categoryScores = JSON.parse(savedCategoryScores);
+      } else {
+        // 互換性のために、保存されていなければ計算 (古いバージョンのサポート)
+        categoryScores = {
+          cashflow: Math.min(Math.max(totalScore * 0.3, 0), 21),
+          insurance: Math.min(Math.max(totalScore * 0.2, 0), 21),
+          investment: Math.min(Math.max(totalScore * 0.2, 0), 21),
+          retirement: Math.min(Math.max(totalScore * 0.15, 0), 21),
+          tax: Math.min(Math.max(totalScore * 0.15, 0), 21)
+        };
+      }
+    } catch (e) {
+      console.error("カテゴリースコアの読み込みに失敗しました", e);
+      // エラー時のフォールバック
+      categoryScores = {
+        cashflow: Math.min(Math.max(totalScore * 0.3, 0), 21),
+        insurance: Math.min(Math.max(totalScore * 0.2, 0), 21),
+        investment: Math.min(Math.max(totalScore * 0.2, 0), 21),
+        retirement: Math.min(Math.max(totalScore * 0.15, 0), 21),
+        tax: Math.min(Math.max(totalScore * 0.15, 0), 21)
+      };
+    }
+    
+    // 各カテゴリーの最大可能スコア（各カテゴリーは3問で構成）
+    const maxCategoryScore = 21; // 3問×7点=21
+    
+    // カテゴリースコアの表示とバーの設定
+    document.getElementById('cashflowScore').textContent = categoryScores.cashflow + '/' + maxCategoryScore;
+    document.getElementById('insuranceScore').textContent = categoryScores.insurance + '/' + maxCategoryScore;
+    document.getElementById('investmentScore').textContent = categoryScores.investment + '/' + maxCategoryScore;
+    document.getElementById('retirementScore').textContent = categoryScores.retirement + '/' + maxCategoryScore;
+    document.getElementById('taxScore').textContent = categoryScores.tax + '/' + maxCategoryScore;
+    document.getElementById('totalScore').textContent = totalScore + '/' + maxPossibleScore;
+    
+    // リスクバーのスタイル設定
+    document.getElementById('cashflowRiskBar').style.width = (categoryScores.cashflow / maxCategoryScore * 100) + '%';
+    document.getElementById('cashflowRiskBar').style.backgroundColor = 'var(--cashflow-color)';
+    
+    document.getElementById('insuranceRiskBar').style.width = (categoryScores.insurance / maxCategoryScore * 100) + '%';
+    document.getElementById('insuranceRiskBar').style.backgroundColor = 'var(--insurance-color)';
+    
+    document.getElementById('investmentRiskBar').style.width = (categoryScores.investment / maxCategoryScore * 100) + '%';
+    document.getElementById('investmentRiskBar').style.backgroundColor = 'var(--investment-color)';
+    
+    document.getElementById('retirementRiskBar').style.width = (categoryScores.retirement / maxCategoryScore * 100) + '%';
+    document.getElementById('retirementRiskBar').style.backgroundColor = 'var(--retirement-color)';
+    
+    document.getElementById('taxRiskBar').style.width = (categoryScores.tax / maxCategoryScore * 100) + '%';
+    document.getElementById('taxRiskBar').style.backgroundColor = 'var(--tax-color)';
+    
+    document.getElementById('totalRiskBar').style.width = (totalScore / maxPossibleScore * 100) + '%';
+    setBarColor('totalRiskBar', totalScore, maxPossibleScore);
+    
+    function setBarColor(elementId, score, maxScore) {
+      const percentage = (score / maxScore) * 100;
+      const element = document.getElementById(elementId);
+      
+      if (percentage >= 75) {
+        element.style.backgroundColor = 'var(--success-color)';
+      } else if (percentage >= 50) {
+        element.style.backgroundColor = 'var(--caution-color)';
+      } else if (percentage >= 25) {
+        element.style.backgroundColor = 'var(--warning-color)';
+      } else {
+        element.style.backgroundColor = 'var(--danger-color)';
+      }
+    }
+    
+    // 結果テキストの設定
+    let resultTitle = "";
+    let resultDescription = "";
+    let riskLevel = "";
+    let riskLevelClass = "";
+    let recommendations = [];
+    
+    // 点数による結果判定
+    const scoreRatio = totalScore / maxPossibleScore;
+    if(scoreRatio >= 0.75) {
+      resultTitle = "非常に安心できる状態です";
+      resultDescription = "あなたのリスク対策は十分に行われています。計画もしっかりできており、将来のリスクにも十分備えられています。引き続き、定期的な見直しを行いながら、現状の良好な対策を維持していきましょう。";
+      riskLevel = "リスク：低";
+      riskLevelClass = "low";
+      recommendations = [
+        "年に1回は金融状況の見直しを行いましょう",
+        "ライフステージの変化があれば対策を再検討しましょう",
+        "更に資産運用の知識を深めて、次のステップに進みましょう"
+      ];
+    } else if(scoreRatio >= 0.5) {
+      resultTitle = "比較的安心できる状態です";
+      resultDescription = "基本的なリスク対策ができている状態です。現状はまずまずですが、いくつかの項目でさらなる対策が必要かもしれません。特に保険や投資面での見直しをおすすめします。";
+      riskLevel = "リスク：中低";
+      riskLevelClass = "low-med";
+      recommendations = [
+        "保険の保障内容を見直し、適切な保障を確保しましょう",
+        "資産配分のバランスを検討し、リスク分散を図りましょう",
+        "毎月の貯蓄額を増やす方法を検討しましょう"
+      ];
+    } else if(scoreRatio >= 0.25) {
+      resultTitle = "注意が必要な状態です";
+      resultDescription = "いくつかの重要な対策が不足している可能性があります。キャッシュフローの見直しや保障の確保など、早急な対策が必要です。専門家のアドバイスを受けることをおすすめします。";
+      riskLevel = "リスク：中高";
+      riskLevelClass = "medium";
+      recommendations = [
+        "家計の収支を見直し、支出を整理しましょう",
+        "緊急時のための貯蓄を最低3ヶ月分確保しましょう",
+        "生命保険や医療保険の加入を検討しましょう",
+        "将来のライフプランを明確に立てましょう"
+      ];
+    } else {
+      resultTitle = "非常にリスクが高い状態です";
+      resultDescription = "あなたの現状は多くのリスクにさらされています。特に緊急時の備えや将来のライフイベントに対する準備が不足しています。今すぐ専門家に相談し、抜本的な対策を検討してください。";
+      riskLevel = "リスク：高";
+      riskLevelClass = "high";
+      recommendations = [
+        "緊急時の備えとして、すぐに貯蓄を始めましょう",
+        "収入と支出のバランスを見直し、赤字体質を改善しましょう",
+        "必要最低限の保険に加入し、リスクを軽減しましょう",
+        "債務がある場合は返済計画を立てましょう",
+        "ファイナンシャルプランナーなどの専門家に相談しましょう"
+      ];
+    }
+    
+    // スコア率の低い項目に基づいて、追加のアドバイスを提供
+    const categoryRatios = {
+      cashflow: categoryScores.cashflow / maxCategoryScore,
+      insurance: categoryScores.insurance / maxCategoryScore,
+      investment: categoryScores.investment / maxCategoryScore,
+      retirement: categoryScores.retirement / maxCategoryScore,
+      tax: categoryScores.tax / maxCategoryScore
+    };
+    
+    // スコア率の低い項目を特定
+    const weakestCategories = Object.entries(categoryRatios)
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, 2)
+      .filter(cat => cat[1] < 0.5)
+      .map(cat => cat[0]);
+      
+    // 弱点カテゴリーに基づく追加アドバイス
+    weakestCategories.forEach(category => {
+      switch(category) {
+        case 'cashflow':
+          recommendations.push("家計簿アプリなどを活用して、毎月の収支を把握しましょう");
+          break;
+        case 'insurance':
+          recommendations.push("必要な保障額を計算し、保険の見直しを行いましょう");
+          break;
+        case 'investment':
+          recommendations.push("積立投資など、少額から始められる投資方法を検討しましょう");
+          break;
+        case 'retirement':
+          recommendations.push("老後に必要な金額を計算し、計画的な資産形成を始めましょう");
+          break;
+        case 'tax':
+          recommendations.push("税制優遇制度（iDeCo、つみたてNISAなど）を活用しましょう");
+          break;
+      }
+    });
+    
+    // テキスト要素に反映
+    document.getElementById("resultTitle").innerHTML = resultTitle;
+    document.getElementById("resultScore").innerHTML = "あなたの得点: " + totalScore + " / " + maxPossibleScore + " 点";
+    document.getElementById("resultDescription").innerHTML = resultDescription;
+    
+    // リスクレベルを表示
+    const riskLevelElement = document.getElementById("riskLevel");
+    riskLevelElement.textContent = riskLevel;
+    riskLevelElement.className = "risk-level " + riskLevelClass;
+    
+    // 推奨事項のリストを作成（重複を削除）
+    const uniqueRecommendations = [...new Set(recommendations)];
+    const recommendationsElement = document.getElementById("recommendations");
+    uniqueRecommendations.forEach(rec => {
+      const li = document.createElement("li");
+      li.textContent = rec;
+      recommendationsElement.appendChild(li);
+    });
+    
+    // レーダーチャートの作成
+    const radarCtx = document.getElementById('radarChart').getContext('2d');
+    const radarChart = new Chart(radarCtx, {
+      type: 'radar',
+      data: {
+        labels: ['キャッシュフロー対策', '保険対策', '資産運用', '老後資金', '税金対策'],
+        datasets: [{
+          label: 'あなたのスコア',
+          data: [
+            categoryScores.cashflow / maxCategoryScore * 10, 
+            categoryScores.insurance / maxCategoryScore * 10, 
+            categoryScores.investment / maxCategoryScore * 10,
+            categoryScores.retirement / maxCategoryScore * 10,
+            categoryScores.tax / maxCategoryScore * 10
+          ],
+          backgroundColor: 'rgba(0, 195, 0, 0.2)',
+          borderColor: 'rgba(0, 195, 0, 1)',
+          borderWidth: 2,
+          pointBackgroundColor: [
+            'var(--cashflow-color)',
+            'var(--insurance-color)',
+            'var(--investment-color)',
+            'var(--retirement-color)',
+            'var(--tax-color)'
+          ],
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(0, 195, 0, 1)'
+        }]
+      },
+      options: {
+        scales: {
+          r: {
+            angleLines: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            pointLabels: {
+              font: {
+                size: 12
+              }
+            },
+            suggestedMin: 0,
+            suggestedMax: 10
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+    
+    // ゲージチャートの作成
+    const gaugeCtx = document.getElementById('gaugeChart').getContext('2d');
+    const gaugeChart = new Chart(gaugeCtx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [totalScore, maxPossibleScore - totalScore],
+          backgroundColor: [
+            getScoreColor(scorePercentage),
+            '#f0f0f0'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        circumference: 270,
+        rotation: -135,
+        cutout: '80%',
+        plugins: {
+          tooltip: {
+            enabled: false
+          },
+          legend: {
+            display: false
+          }
+        },
+        animation: {
+          animateRotate: true,
+          animateScale: true
+        }
+      }
+    });
+    
+    // スコアに応じた色を取得
+    function getScoreColor(percentage) {
+      if (percentage >= 80) return 'var(--success-color)';
+      if (percentage >= 60) return 'var(--caution-color)';
+      if (percentage >= 40) return 'var(--warning-color)';
+      return 'var(--danger-color)';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KZGT7CGS');</script>
+  <!-- End Google Tag Manager -->
+  <title>LINE友達登録</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-color: #00c300;
+      --background-color: #eef2f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #333;
+    }
+    .line-container {
+      max-width: 600px;
+      width: 90%;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .line-header {
+      margin-bottom: 20px;
+    }
+    .line-header h1 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    .line-logo {
+      width: 100px;
+      height: 100px;
+      margin: 20px auto;
+      background-color: var(--primary-color);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      color: white;
+    }
+    .line-description {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+    .qr-container {
+      margin: 20px auto;
+      max-width: 200px;
+    }
+    .qr-container img {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .line-id {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      border: 1px dashed #ccc;
+    }
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-decoration: none;
+    }
+    .cta-button:hover {
+      background-color: #009900;
+      transform: translateY(-3px);
+    }
+    .cta-button i { margin-right: 8px; font-size: 1.4rem; }
+    .already-registered {
+      margin-top: 20px;
+      font-size: 0.95rem;
+    }
+    .already-registered a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .already-registered a:hover {
+      text-decoration: underline;
+    }
+    .hidden {
+      display: none;
+    }
+    .fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .loading-spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 195, 0, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZGT7CGS"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  
+  <!-- LINE登録画面 -->
+  <div id="lineRegistration" class="line-container fade-in">
+    <div class="line-header">
+      <h1>診断結果を見るには</h1>
+      <p>LINE友達登録が必要です</p>
+    </div>
+    
+    <div class="line-logo">
+      <i class="fab fa-line"></i>
+    </div>
+    
+    <div class="line-description">
+      <p>あなたの診断結果を表示するには、下記のQRコードまたはLINE IDからLINE友達登録を行ってください。</p>
+    </div>
+    
+    <div class="qr-container">
+      <!-- QRコード画像 -->
+      <img src="images/hige-qr.png" alt="LINE友達登録用QRコード">
+    </div>
+    
+    <div class="line-id">
+      LINE ID: @427cbszb
+    </div>
+    
+    <button id="registrationComplete" class="cta-button hidden">
+      <i class="fab fa-line"></i>LINE友達登録完了
+    </button>
+    
+    <div class="already-registered">
+      <p>すでに登録されている方は<a href="result.html" id="alreadyRegisteredLink">こちら</a>から診断結果を確認できます</p>
+    </div>
+  </div>
+  
+  <!-- 読み込み中画面 - 初期状態は非表示 -->
+  <div id="loadingScreen" class="line-container fade-in hidden">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">診断結果を読み込み中...</div>
+  </div>
+
+  <script>
+    // URLからパラメータを取得する関数
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      const results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+    
+    // LINEからのアクセスかどうかを判定
+    const fromLine = getUrlParameter('from') === 'line';
+    
+    // すでにLINEリンクを踏んだフラグがある場合も含めてチェック
+    if (fromLine || localStorage.getItem('lineRegistered') === 'true') {
+      // LINEからのアクセスなら登録済みフラグをセット
+      localStorage.setItem('lineRegistered', 'true');
+      
+      // LINE登録画面を隠して、ローディング画面を表示
+      document.getElementById('lineRegistration').classList.add('hidden');
+      document.getElementById('loadingScreen').classList.remove('hidden');
+      
+      // 少し待ってから結果ページにリダイレクト（UXのため）
+      setTimeout(function() {
+        window.location.href = "result.html";
+      }, 1500);
+    } else {
+      // 初回アクセスの場合は通常のフロー
+      // 8秒後に「LINE友達登録完了」ボタンを表示
+      setTimeout(function() {
+        const button = document.getElementById("registrationComplete");
+        button.classList.remove("hidden");
+        button.classList.add("fade-in");
+      }, 8000);
+    
+      // ボタンクリックで結果ページへ遷移し、フラグを保存
+      document.getElementById("registrationComplete").addEventListener("click", function() {
+        localStorage.setItem('lineRegistered', 'true');
+        window.location.href = "result.html";
+      });
+      
+      // すでに登録されている方へのリンクにパラメータを追加
+      document.getElementById("alreadyRegisteredLink").addEventListener("click", function(e) {
+        // リンククリック時にフラグを立てる（戻ってきた時に使用）
+        localStorage.setItem('lineRegistered', 'true');
+      });
+    }
+  </script>
+</body>
+</html>

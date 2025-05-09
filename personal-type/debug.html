@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>診断アプリ - デバッグツール</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #00c300;
+      --secondary-color: #009900;
+      --background-color: #eef2f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    .storage-state {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      margin-bottom: 20px;
+    }
+    .control-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+    .nav-links {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .nav-link {
+      padding: 8px 15px;
+      background: #eee;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #333;
+    }
+    .nav-link:hover {
+      background: #ddd;
+    }
+    .debug-log {
+      max-height: 200px;
+      overflow-y: auto;
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      margin-bottom: 20px;
+    }
+    .test-actions {
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>診断アプリ デバッグツール</h1>
+    
+    <div class="section">
+      <h2>LocalStorage 現在の状態</h2>
+      <div class="storage-state" id="storageState">読み込み中...</div>
+      
+      <div class="control-buttons">
+        <button onclick="clearAllStorage()">すべてクリア</button>
+        <button onclick="clearLineRegistered()">LINE登録情報のみクリア</button>
+        <button onclick="clearFirstVisit()">訪問情報のみクリア</button>
+        <button onclick="clearTypeAnswers()">診断回答のみクリア</button>
+        <button onclick="mockLineRegistered()">LINE登録済みとする</button>
+        <button onclick="refreshStorageState()">更新</button>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>システム情報</h2>
+      <div class="storage-state" id="systemInfo">
+        ブラウザ: <span id="browserInfo"></span><br>
+        URL: <span id="currentUrl"></span><br>
+        ローカルサーバー: ポート5500を使用中
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>デバッグログ</h2>
+      <div class="debug-log" id="debugLog"></div>
+      <button onclick="clearDebugLog()">ログをクリア</button>
+    </div>
+    
+    <div class="section">
+      <h2>テスト用リンク</h2>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">トップページ</a>
+        <a href="quiz.html" class="nav-link">診断質問</a>
+        <a href="loading.html" class="nav-link">ローディング</a>
+        <a href="line-register.html" class="nav-link">LINE登録ページ</a>
+        <a href="result.html" class="nav-link">診断結果</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>テストシナリオ</h2>
+      
+      <div class="test-actions">
+        <h3>1. 初回訪問のシミュレーション</h3>
+        <p>LocalStorageをクリアして初回訪問状態にセットアップします。</p>
+        <button onclick="setupFirstVisitTest()">初回訪問テスト準備</button>
+        <button onclick="window.open('index.html', '_blank')">テスト実行</button>
+      </div>
+      
+      <div class="test-actions">
+        <h3>2. LINE登録後のフローテスト</h3>
+        <p>LINE登録済み状態にして、診断から結果表示までの流れをテスト</p>
+        <button onclick="setupLineRegisteredTest()">LINE登録済みテスト準備</button>
+        <button onclick="window.open('quiz.html', '_blank')">テスト実行</button>
+      </div>
+      
+      <div class="test-actions">
+        <h3>3. URLパラメータテスト</h3>
+        <p>from=lineパラメータ付きでアクセスした場合の動作テスト</p>
+        <button onclick="clearAllStorage()">ストレージクリア</button>
+        <button onclick="window.open('index.html?from=line', '_blank')">LINEからのアクセスをシミュレート</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // LocalStorageキー
+    const LINE_REGISTERED_KEY = 'line_registered';
+    const FIRST_VISIT_KEY = 'first_visit';
+    const TYPE_ANSWERS_KEY = 'typeAnswers';
+    
+    // デバッグログ機能
+    function addDebugLog(message) {
+      const logElement = document.getElementById('debugLog');
+      const timestamp = new Date().toLocaleTimeString();
+      logElement.innerHTML += `[${timestamp}] ${message}<br>`;
+      logElement.scrollTop = logElement.scrollHeight;
+    }
+    
+    function clearDebugLog() {
+      document.getElementById('debugLog').innerHTML = '';
+      addDebugLog('ログをクリアしました');
+    }
+
+    // LocalStorage操作関数
+    function refreshStorageState() {
+      const storageState = {
+        'line_registered': localStorage.getItem(LINE_REGISTERED_KEY),
+        'first_visit': localStorage.getItem(FIRST_VISIT_KEY),
+        'typeAnswers': localStorage.getItem(TYPE_ANSWERS_KEY)
+      };
+      
+      document.getElementById('storageState').textContent = JSON.stringify(storageState, null, 2);
+      
+      addDebugLog('LocalStorage状態を更新しました');
+      
+      return storageState;
+    }
+    
+    function clearAllStorage() {
+      localStorage.clear();
+      refreshStorageState();
+      addDebugLog('すべてのLocalStorage項目をクリアしました');
+    }
+    
+    function clearLineRegistered() {
+      localStorage.removeItem(LINE_REGISTERED_KEY);
+      refreshStorageState();
+      addDebugLog('LINE登録情報をクリアしました');
+    }
+    
+    function clearFirstVisit() {
+      localStorage.removeItem(FIRST_VISIT_KEY);
+      refreshStorageState();
+      addDebugLog('訪問情報をクリアしました');
+    }
+    
+    function clearTypeAnswers() {
+      localStorage.removeItem(TYPE_ANSWERS_KEY);
+      refreshStorageState();
+      addDebugLog('診断回答をクリアしました');
+    }
+    
+    function mockLineRegistered() {
+      localStorage.setItem(LINE_REGISTERED_KEY, 'registered');
+      refreshStorageState();
+      addDebugLog('LINE登録済み状態にセットしました');
+    }
+    
+    // テストセットアップ
+    function setupFirstVisitTest() {
+      clearAllStorage();
+      addDebugLog('初回訪問テストの準備が完了しました');
+    }
+    
+    function setupLineRegisteredTest() {
+      clearAllStorage();
+      mockLineRegistered();
+      addDebugLog('LINE登録済みテストの準備が完了しました');
+    }
+    
+    // システム情報取得
+    function loadSystemInfo() {
+      document.getElementById('browserInfo').textContent = navigator.userAgent;
+      document.getElementById('currentUrl').textContent = window.location.href;
+    }
+    
+    // 初期化
+    window.onload = function() {
+      loadSystemInfo();
+      refreshStorageState();
+      addDebugLog('デバッグツールを初期化しました');
+    };
+  </script>
+</body>
+</html>

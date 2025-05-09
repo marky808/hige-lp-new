@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>テストツール - LINE登録状態管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-color: #00c300;
+      --background-color: #eef2f6;
+      --secondary-color: #007700;
+      --danger-color: #ff4136;
+      --warning-color: #ff851b;
+      --info-color: #2196F3;
+      --dark-color: #333;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      padding: 20px;
+      color: var(--dark-color);
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+    .header h1 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: #666;
+    }
+    .panel {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+    .panel h2 {
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      font-size: 1.5rem;
+    }
+    .info-box {
+      background: #f9f9f9;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 20px 0;
+      border-left: 4px solid var(--info-color);
+    }
+    .state-indicator {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 15px;
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .state-true {
+      background-color: var(--primary-color);
+    }
+    .state-false {
+      background-color: var(--danger-color);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    table th {
+      background-color: #f3f3f3;
+      color: #555;
+      font-weight: 500;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .btn:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+    }
+    .btn-danger {
+      background-color: var(--danger-color);
+    }
+    .btn-danger:hover {
+      background-color: #d32f2f;
+    }
+    .btn-warning {
+      background-color: var(--warning-color);
+    }
+    .btn-warning:hover {
+      background-color: #ef6c00;
+    }
+    .btn-info {
+      background-color: var(--info-color);
+    }
+    .btn-info:hover {
+      background-color: #1976D2;
+    }
+    .test-links {
+      margin: 25px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .test-card {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+    .test-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .test-card h3 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    .test-card p {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+    .code {
+      background: #f3f3f3;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+    .score-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .score-item {
+      background: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .score-item h4 {
+      margin-bottom: 5px;
+      color: #555;
+    }
+    .alert {
+      padding: 10px 15px;
+      border-radius: 4px;
+      margin: 15px 0;
+      color: white;
+      display: none;
+    }
+    .alert-success {
+      background-color: var(--primary-color);
+    }
+    .alert-danger {
+      background-color: var(--danger-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>テストツール - LINE登録状態管理</h1>
+      <p>初回アクセスとLINE登録後の状態をテストするためのツール</p>
+      <p>現在日時: <span id="currentDate"></span></p>
+    </div>
+
+    <!-- 現在の状態パネル -->
+    <div class="panel">
+      <h2>現在の状態</h2>
+      <div class="info-box">
+        <p>LINE登録状態: 
+          <span id="lineRegisteredStatus" class="state-indicator">確認中...</span>
+        </p>
+        <p>LINE経由アクセス: 
+          <span id="fromLineStatus" class="state-indicator">確認中...</span>
+        </p>
+        <p>登録日時: <span id="registrationDate">-</span></p>
+      </div>
+      
+      <h3>LocalStorageデータ</h3>
+      <table id="localStorageTable">
+        <thead>
+          <tr>
+            <th>キー</th>
+            <th>値</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JavaScriptで動的に表示 -->
+        </tbody>
+      </table>
+      
+      <div>
+        <button id="resetAll" class="btn btn-danger">すべてリセット</button>
+        <button id="setLineRegistered" class="btn">LINE登録済みに設定</button>
+        <button id="removeLineRegistered" class="btn btn-warning">LINE登録フラグ削除</button>
+      </div>
+
+      <div id="actionAlert" class="alert">操作が完了しました</div>
+    </div>
+    
+    <!-- スコアデータパネル -->
+    <div class="panel">
+      <h2>診断スコアデータ</h2>
+      <div class="score-panel">
+        <div class="score-item">
+          <h4>総合スコア</h4>
+          <p id="totalScoreValue">-</p>
+        </div>
+        <div class="score-item">
+          <h4>キャッシュフローリスク</h4>
+          <p id="cashflowScoreValue">-</p>
+        </div>
+        <div class="score-item">
+          <h4>保険リスク</h4>
+          <p id="insuranceScoreValue">-</p>
+        </div>
+        <div class="score-item">
+          <h4>投資リスク</h4>
+          <p id="investmentScoreValue">-</p>
+        </div>
+        <div class="score-item">
+          <h4>老後資金リスク</h4>
+          <p id="retirementScoreValue">-</p>
+        </div>
+        <div class="score-item">
+          <h4>税金リスク</h4>
+          <p id="taxScoreValue">-</p>
+        </div>
+      </div>
+
+      <div>
+        <button id="generateRandomScores" class="btn btn-info">ランダムスコア生成</button>
+        <button id="resetScores" class="btn btn-warning">スコアデータリセット</button>
+      </div>
+    </div>
+    
+    <!-- テストリンクパネル -->
+    <div class="panel">
+      <h2>テスト用リンク</h2>
+      <div class="test-links">
+        <div class="test-card">
+          <h3>初回アクセステスト</h3>
+          <p>LINE登録が必要な状態でテスト</p>
+          <a href="loading.html" class="btn">LINE登録画面へ</a>
+        </div>
+        
+        <div class="test-card">
+          <h3>LINE登録済みテスト</h3>
+          <p>登録済みの状態でLINE登録画面をスキップ</p>
+          <a href="loading.html" class="btn">登録済み状態でアクセス</a>
+        </div>
+        
+        <div class="test-card">
+          <h3>LINEからのアクセステスト</h3>
+          <p>LINE経由のアクセスをシミュレート</p>
+          <a href="loading.html?from=line" class="btn">LINEから来た状態</a>
+        </div>
+
+        <div class="test-card">
+          <h3>診断開始</h3>
+          <p>質問からスタート</p>
+          <a href="quiz.html" class="btn">診断質問へ</a>
+        </div>
+
+        <div class="test-card">
+          <h3>結果ページ直接表示</h3>
+          <p>結果ページに直接アクセス</p>
+          <a href="result.html" class="btn">結果表示</a>
+        </div>
+
+        <div class="test-card">
+          <h3>トップページ</h3>
+          <p>最初の画面に戻る</p>
+          <a href="index.html" class="btn">トップへ</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 使用方法パネル -->
+    <div class="panel">
+      <h2>使用方法</h2>
+      <ol>
+        <li>「すべてリセット」ボタンを押して、LocalStorageのデータを削除し、初回アクセス状態にします</li>
+        <li>「初回アクセステスト」リンクで、LINE登録画面が表示されることを確認します</li>
+        <li>「LINE登録済みに設定」ボタンを押して、登録済み状態にします</li>
+        <li>「LINE登録済みテスト」リンクで、登録画面がスキップされて結果画面に直接遷移することを確認します</li>
+        <li>「LINEからのアクセステスト」リンクで、URLパラメーター付きのアクセスをテストします</li>
+      </ol>
+      
+      <h3>テスト用パラメーターの説明</h3>
+      <div class="code">
+loading.html?from=line  // LINEからのアクセスを示すパラメーター
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 現在の日時を表示
+    function updateDateTime() {
+      const now = new Date();
+      const dateTimeStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      document.getElementById('currentDate').textContent = dateTimeStr;
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    
+    // 現在の状態を表示
+    function updateStatus() {
+      // LINE登録状態
+      const lineRegistered = localStorage.getItem('lineRegistered') === 'true';
+      const lineStatus = document.getElementById('lineRegisteredStatus');
+      lineStatus.textContent = lineRegistered ? '登録済み' : '未登録';
+      lineStatus.className = lineRegistered ? 'state-indicator state-true' : 'state-indicator state-false';
+      
+      // 登録日時
+      const registrationDate = localStorage.getItem('lineRegistrationDate');
+      document.getElementById('registrationDate').textContent = registrationDate || '登録情報なし';
+      
+      // LINE経由アクセス
+      const fromLine = new URLSearchParams(window.location.search).get('from') === 'line';
+      const fromLineStatus = document.getElementById('fromLineStatus');
+      fromLineStatus.textContent = fromLine ? 'LINEから' : '通常アクセス';
+      fromLineStatus.className = fromLine ? 'state-indicator state-true' : 'state-indicator state-false';
+      
+      // LocalStorageテーブル更新
+      updateLocalStorageTable();
+      
+      // スコアデータ表示
+      updateScoreData();
+    }
+    
+    // LocalStorageテーブルを更新
+    function updateLocalStorageTable() {
+      const tableBody = document.getElementById('localStorageTable').getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = '';
+      
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        
+        const row = tableBody.insertRow();
+        row.insertCell(0).textContent = key;
+        
+        // 値のセル作成、長いJSONは折りたたむ
+        const valueCell = row.insertCell(1);
+        if (value.startsWith('{') && value.length > 50) {
+          try {
+            const obj = JSON.parse(value);
+            valueCell.textContent = JSON.stringify(obj, null, 2).substring(0, 50) + '...';
+          } catch(e) {
+            valueCell.textContent = value.substring(0, 50) + '...';
+          }
+        } else {
+          valueCell.textContent = value;
+        }
+        
+        // 削除ボタン追加
+        const actionsCell = row.insertCell(2);
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '削除';
+        deleteBtn.className = 'btn btn-danger';
+        deleteBtn.style.padding = '5px 10px';
+        deleteBtn.style.fontSize = '0.8rem';
+        deleteBtn.onclick = function() {
+          localStorage.removeItem(key);
+          updateStatus();
+          showAlert('success', `${key} を削除しました`);
+        };
+        actionsCell.appendChild(deleteBtn);
+      }
+      
+      if (localStorage.length === 0) {
+        const row = tableBody.insertRow();
+        const cell = row.insertCell(0);
+        cell.textContent = 'LocalStorageのデータはありません';
+        cell.colSpan = 3;
+        cell.style.textAlign = 'center';
+        cell.style.color = '#888';
+      }
+    }
+    
+    // スコアデータ表示
+    function updateScoreData() {
+      const totalScore = localStorage.getItem('riskTotalScore') || '-';
+      document.getElementById('totalScoreValue').textContent = totalScore;
+      
+      try {
+        const categoryScores = JSON.parse(localStorage.getItem('riskCategoryScores'));
+        if (categoryScores) {
+          document.getElementById('cashflowScoreValue').textContent = categoryScores.cashflow || '0';
+          document.getElementById('insuranceScoreValue').textContent = categoryScores.insurance || '0';
+          document.getElementById('investmentScoreValue').textContent = categoryScores.investment || '0';
+          document.getElementById('retirementScoreValue').textContent = categoryScores.retirement || '0';
+          document.getElementById('taxScoreValue').textContent = categoryScores.tax || '0';
+        } else {
+          document.getElementById('cashflowScoreValue').textContent = '-';
+          document.getElementById('insuranceScoreValue').textContent = '-';
+          document.getElementById('investmentScoreValue').textContent = '-';
+          document.getElementById('retirementScoreValue').textContent = '-';
+          document.getElementById('taxScoreValue').textContent = '-';
+        }
+      } catch(e) {
+        console.error('カテゴリースコアの読み込みエラー', e);
+      }
+    }
+    
+    // 通知アラートを表示
+    function showAlert(type, message) {
+      const alert = document.getElementById('actionAlert');
+      alert.textContent = message;
+      alert.className = type === 'success' ? 'alert alert-success' : 'alert alert-danger';
+      alert.style.display = 'block';
+      
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 3000);
+    }
+    
+    // 登録状態をセット
+    document.getElementById('setLineRegistered').addEventListener('click', function() {
+      localStorage.setItem('lineRegistered', 'true');
+      const now = new Date();
+      localStorage.setItem('lineRegistrationDate', now.toLocaleString());
+      updateStatus();
+      showAlert('success', 'LINE登録済み状態に設定しました');
+    });
+    
+    // 登録状態を削除
+    document.getElementById('removeLineRegistered').addEventListener('click', function() {
+      localStorage.removeItem('lineRegistered');
+      localStorage.removeItem('lineRegistrationDate');
+      updateStatus();
+      showAlert('success', 'LINE登録状態を削除しました');
+    });
+    
+    // すべてリセット
+    document.getElementById('resetAll').addEventListener('click', function() {
+      if (confirm('LocalStorageのすべてのデータを削除します。よろしいですか？')) {
+        localStorage.clear();
+        updateStatus();
+        showAlert('success', 'すべてのデータをリセットしました');
+      }
+    });
+    
+    // ランダムスコア生成
+    document.getElementById('generateRandomScores').addEventListener('click', function() {
+      const getRandomScore = (max) => Math.floor(Math.random() * (max + 1));
+      
+      const cashflowScore = getRandomScore(21); // 各カテゴリーは最大21点
+      const insuranceScore = getRandomScore(21);
+      const investmentScore = getRandomScore(21);
+      const retirementScore = getRandomScore(21);
+      const taxScore = getRandomScore(21);
+      
+      const totalScore = cashflowScore + insuranceScore + investmentScore + retirementScore + taxScore;
+      
+      localStorage.setItem('riskTotalScore', totalScore);
+      localStorage.setItem('maxPossibleScore', 105); // 15問×7点=105
+      
+      const categoryScores = {
+        cashflow: cashflowScore,
+        insurance: insuranceScore,
+        investment: investmentScore,
+        retirement: retirementScore,
+        tax: taxScore
+      };
+      
+      localStorage.setItem('riskCategoryScores', JSON.stringify(categoryScores));
+      
+      updateStatus();
+      showAlert('success', 'ランダムなスコアデータを生成しました');
+    });
+    
+    // スコアデータリセット
+    document.getElementById('resetScores').addEventListener('click', function() {
+      localStorage.removeItem('riskTotalScore');
+      localStorage.removeItem('riskCategoryScores');
+      localStorage.removeItem('maxPossibleScore');
+      updateStatus();
+      showAlert('success', 'スコアデータをリセットしました');
+    });
+    
+    // 初期化
+    updateStatus();
+  </script>
+</body>
+</html>

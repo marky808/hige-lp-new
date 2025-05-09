@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KZGT7CGS');</script>
+  <!-- End Google Tag Manager -->
+  <title>パーソナルリスク診断 - 質問</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-color: #00c300;
+      --background-gradient: linear-gradient(135deg, #e0f7e9, #c8f0d8);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--background-gradient);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .quiz-container {
+      width: 90%;
+      max-width: 700px;
+      margin: 20px auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 10px 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .card h2 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    .option-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin: 10px 0;
+      cursor: pointer;
+      background-color: #fafafa;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .option-card:hover { background-color: #f5f5f5; transform: scale(1.02); }
+    .option-card.selected {
+      border-color: var(--primary-color);
+      background-color: #e6f9e6;
+    }
+    /* カテゴリーヘッダー */
+    .category-header {
+      background: rgba(217, 247, 190, 0.8);
+      color: var(--primary-color);
+      padding: 10px;
+      border-radius: 8px;
+      margin: 20px 0 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    /* アニメーションキーフレーム */
+    @keyframes fadeInUpStrong {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes fadeOutShrink {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.8); }
+    }
+    .animated { animation: fadeInUpStrong 0.8s ease-out forwards; }
+    .progress-container {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+    .progress-text {
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZGT7CGS"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  
+  <div class="quiz-container" id="quizArea">
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">質問 1/15</div>
+    </div>
+  </div>
+  <script>
+    // 質問データ：各質問に「text」、「points」、「category」を設定
+    const questions = [
+      // キャッシュフローリスクのカテゴリー
+      { 
+        text: "将来のライフイベントやリスクに対して、計画を立てていますか？", 
+        points: { yes: 7, no: 0 },
+        category: "cashflow"
+      },
+      { 
+        text: "毎月の収支をしっかり把握していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "cashflow"
+      },
+      { 
+        text: "毎月の貯蓄額を決めていますか？", 
+        points: { yes: 7, no: 0 },
+        category: "cashflow"
+      },
+      
+      // 保険リスクのカテゴリー
+      { 
+        text: "病気や怪我に備えて医療保険に加入していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "insurance"
+      },
+      { 
+        text: "病気や怪我などの際に必要な保障額を計算したことはありますか？", 
+        points: { yes: 7, no: 0 },
+        category: "insurance"
+      },
+      { 
+        text: "万が一のことがあった時のために生命保険に加入していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "insurance"
+      },
+      { 
+        text: "死亡時や障害状態になった時に自分や家族にどのような金銭的な影響があるか計算したことはありますか？", 
+        points: { yes: 7, no: 0 },
+        category: "insurance"
+      },
+      { 
+        text: "定期的に保険の見直しをしていますか？", 
+        points: { yes: 7, no: 0 },
+        category: "insurance"
+      },
+      { 
+        text: "保険の見直しをしなければならないタイミングはわかりますか？", 
+        points: { yes: 7, no: 0 },
+        category: "insurance"
+      },
+      
+      // 投資リスクのカテゴリー
+      { 
+        text: "銀行以外の貯蓄手段を利用していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "investment"
+      },
+      { 
+        text: "投資のリスクとリターンについて理解していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "investment"
+      },
+      { 
+        text: "資産運用のための勉強をしていますか？", 
+        points: { yes: 7, no: 0 },
+        category: "investment"
+      },
+      
+      // 老後資金リスクのカテゴリー
+      { 
+        text: "老後に必要な金額を計算したことがありますか？", 
+        points: { yes: 7, no: 0 },
+        category: "retirement"
+      },
+      { 
+        text: "年金以外に老後の資金準備をしていますか？", 
+        points: { yes: 7, no: 0 },
+        category: "retirement"
+      },
+      { 
+        text: "iDeCoやつみたてNISAなどの制度を利用していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "retirement"
+      },
+      
+      // 税金リスクのカテゴリー
+      { 
+        text: "税金の控除制度について理解していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "tax"
+      },
+      { 
+        text: "税制優遇のある金融商品を利用していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "tax"
+      },
+      { 
+        text: "積立投資の金額は長期間(15年以上)続ける前提で設定していますか？", 
+        points: { yes: 7, no: 0 },
+        category: "tax"
+      },
+      { 
+        text: "確定申告の方法は知っていますか？", 
+        points: { yes: 7, no: 0 },
+        category: "tax"
+      },
+      { 
+        text: "長期積立のお金を使う際に損をせずに取り崩す対策を知っていますか？", 
+        points: { yes: 7, no: 0 },
+        category: "tax"
+      }
+    ];
+    
+    // カテゴリーの日本語名と配色設定
+    const categories = {
+      "cashflow": { name: "キャッシュフローリスク", color: "#00c300" },
+      "insurance": { name: "保険リスク", color: "#2196F3" },
+      "investment": { name: "投資リスク", color: "#FF9800" },
+      "retirement": { name: "老後資金リスク", color: "#9C27B0" },
+      "tax": { name: "税金リスク", color: "#F44336" }
+    };
+    
+    let currentQuestionIndex = 0;
+    let totalScore = 0;
+    // カテゴリー別のスコアを記録するオブジェクト
+    let categoryScores = {
+      cashflow: 0,
+      insurance: 0,
+      investment: 0,
+      retirement: 0,
+      tax: 0
+    };
+    let currentCategory = "";
+    const quizArea = document.getElementById("quizArea");
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+    
+    function updateProgress() {
+      const progress = ((currentQuestionIndex) / questions.length) * 100;
+      progressFill.style.width = `${progress}%`;
+      progressText.textContent = `質問 ${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    function showQuestion() {
+      // プログレスバーを更新
+      updateProgress();
+      
+      // メインコンテナはそのままに、質問カードだけをクリア
+      const cardElements = quizArea.querySelectorAll('.card, .category-header');
+      cardElements.forEach(el => el.remove());
+      
+      // 現在のカテゴリーをチェック
+      if (currentQuestionIndex < questions.length) {
+        const q = questions[currentQuestionIndex];
+        
+        // カテゴリーが変わったらヘッダーを表示
+        if (currentCategory !== q.category) {
+          currentCategory = q.category;
+          const categoryHeader = document.createElement("div");
+          categoryHeader.className = "category-header animated";
+          categoryHeader.textContent = categories[currentCategory].name;
+          categoryHeader.style.backgroundColor = `${categories[currentCategory].color}20`; // 透明度を追加
+          categoryHeader.style.color = categories[currentCategory].color;
+          quizArea.appendChild(categoryHeader);
+        }
+        
+        const card = document.createElement("div");
+        card.className = "card animated";
+        card.innerHTML = `<h2>${q.text}</h2>`;
+        
+        const btnYes = document.createElement("div");
+        btnYes.className = "option-card";
+        btnYes.textContent = "はい";
+        btnYes.addEventListener("click", () => {
+          // カテゴリー別のスコアを加算
+          categoryScores[q.category] += q.points.yes;
+          totalScore += q.points.yes;
+          card.style.animation = "fadeOutShrink 0.3s ease-out forwards";
+          setTimeout(() => { 
+            currentQuestionIndex++; 
+            showQuestion(); 
+          }, 300);
+        });
+        
+        const btnNo = document.createElement("div");
+        btnNo.className = "option-card";
+        btnNo.textContent = "いいえ";
+        btnNo.addEventListener("click", () => {
+          // カテゴリー別のスコアを加算
+          categoryScores[q.category] += q.points.no;
+          totalScore += q.points.no;
+          card.style.animation = "fadeOutShrink 0.3s ease-out forwards";
+          setTimeout(() => { 
+            currentQuestionIndex++; 
+            showQuestion(); 
+          }, 300);
+        });
+        
+        card.appendChild(btnYes);
+        card.appendChild(btnNo);
+        quizArea.appendChild(card);
+      } else {
+        // すべての質問終了後、カテゴリー別スコアと総合スコアを保存
+        localStorage.setItem("riskTotalScore", totalScore);
+        localStorage.setItem("riskCategoryScores", JSON.stringify(categoryScores));
+        localStorage.setItem("maxPossibleScore", questions.length * 7); // 最大可能スコア
+        window.location.href = "loading.html";
+      }
+    }
+    
+    showQuestion();
+  </script>
+</body>
+</html>

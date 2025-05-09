@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KZGT7CGS');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <title>パーソナルタイプ診断 - 質問</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-color: #00c300;
+      --secondary-color: #009900;
+      --background-gradient: linear-gradient(135deg, #e0f7e9, #c8f0d8);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--background-gradient);
+      padding: 20px;
+      padding-top: 80px; /* プログレスバー分の余白を追加 */
+      min-height: 100vh;
+    }
+    
+    /* プログレスバー関連スタイル */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .question-count {
+      font-weight: bold;
+      color: var(--secondary-color);
+    }
+    .category-indicator {
+      background: rgba(0, 195, 0, 0.1);
+      color: var(--secondary-color);
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary-color);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    
+    .quiz-container {
+      width: 90%;
+      max-width: 700px;
+      margin: 20px auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 10px 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--secondary-color);
+    }
+    .option-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin: 10px 0;
+      cursor: pointer;
+      background-color: #fafafa;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .option-card:hover { background-color: #f5f5f5; transform: scale(1.02); }
+    .option-card.selected {
+      border-color: var(--primary-color);
+      background-color: #e6f9e6;
+    }
+    .category-header {
+      background: rgba(217, 247, 190, 0.8);
+      color: var(--primary-color);
+      padding: 10px;
+      border-radius: 8px;
+      margin: 20px 0 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    @keyframes fadeInUpStrong {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes fadeOutShrink {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.8); }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animated { animation: fadeInUpStrong 0.8s ease-out forwards; }
+    
+    /* ドットナビゲーション */
+    .dot-navigation {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0 20px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      margin: 0 3px;
+      background-color: #ddd;
+      border-radius: 50%;
+    }
+    .dot.active {
+      background-color: var(--primary-color);
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZGT7CGS"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  
+  <!-- プログレスバー表示エリア -->
+  <div class="progress-container">
+    <div class="progress-info">
+      <div class="question-count">質問 <span id="currentQuestionNumber">0</span>/20</div>
+      <div class="category-indicator" id="currentCategory">カテゴリー</div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+  </div>
+  
+  <div class="quiz-container" id="quizArea">
+    <!-- 初期化中メッセージ -->
+    <div class="card" style="text-align: center;">
+      <h2>質問を準備中です...</h2>
+      <div style="margin:20px auto; width:40px; height:40px; border:4px solid #f3f3f3; border-top:4px solid var(--primary-color); border-radius:50%; animation:spin 1s linear infinite;"></div>
+    </div>
+  </div>
+
+  <!-- デバッグ情報パネル -->
+  <div style="position:fixed; bottom:10px; left:10px; padding:5px 10px; background:rgba(0,0,0,0.7); color:white; font-size:12px; border-radius:4px;" id="debugPanel"></div>
+
+  <!-- 緊急ナビゲーション -->
+  <div style="position:fixed; bottom:10px; right:10px; display:none;" id="emergencyNav">
+    <a href="loading.html" style="display:block; margin-bottom:5px; padding:5px 10px; background:#fff; border:1px solid #00c300; color:#00c300; text-decoration:none; border-radius:4px;">次のページへ</a>
+    <a href="index.html" style="display:block; padding:5px 10px; background:#fff; border:1px solid #999; color:#999; text-decoration:none; border-radius:4px;">トップに戻る</a>
+  </div>
+
+  <script>
+    // デバッグ情報表示
+    function showDebug(message) {
+      console.log(message);
+      const debugPanel = document.getElementById('debugPanel');
+      debugPanel.textContent = message;
+      debugPanel.style.display = 'block';
+    }
+
+    // 質問データ：20問（グループ1～4）
+    const questions = [
+      { text: "1. 現在ご結婚されてますか？", group: 1 },
+      { text: "2. 未成年のお子さんはいらっしゃいますか？", group: 1 },
+      { text: "3. あなたの収入がないと家計が成り立ちませんか？", group: 1 },
+      { text: "4. 自分に大きな病気や入院などのもしものことがあった時の対策を考えたことがありますか？", group: 1 },
+      { text: "5. 自宅はあなた名義の持ち家ですか？", group: 1 },
+      
+      { text: "6. 現在500万以上の資産はありますか？", group: 2 },
+      { text: "7. 世帯年収は1000万円以上ですか？", group: 2 },
+      { text: "8. 特に大きな出費がない月は毎月5万円以上の貯蓄はできますか？", group: 2 },
+      { text: "9. いまの収入は安定していますか？", group: 2 },
+      { text: "10. 職場が潰れても一年以内には収入に戻せますか？", group: 2 },
+      
+      { text: "11. あなたは金融について詳しいですか？", group: 3 },
+      { text: "12. 投資や保険に関する知識を自ら身につけたいと思いますか？", group: 3 },
+      { text: "13. 資産運用中の大きな下落にも冷静に対応できますか？", group: 3 },
+      { text: "14. ライフステージが変化した時(結婚、出産、離婚等)に適切な資産配分の仕方は分かりますか？", group: 3 },
+      { text: "15. 全て自分で解決したいと思いますか？", group: 3 },
+      
+      { text: "16. リスクはあっても早く大きく資産が増える投資に魅力を感じますか？", group: 4 },
+      { text: "17. なるべく少ない投資金額で大きな資産を作ることが目標ですか？", group: 4 },
+      { text: "18. 投資で損失が出ても自己責任で受け入れられますか？", group: 4 },
+      { text: "19. 何に投資をするかどうかを判断する情報源はSNSですか？", group: 4 },
+      { text: "20. 資産運用中に大きな下落があったときでも自分の資産を冷静に客観的に扱えますか？", group: 4 }
+    ];
+    
+    // カテゴリー名マッピング
+    const groupNames = { 1: "家族", 2: "資金", 3: "自分", 4: "リスク" };
+    
+    let currentQuestionIndex = 0;
+    let answers = []; // 各質問の回答をtrue/falseで保存
+    
+    const quizArea = document.getElementById("quizArea");
+    const progressFill = document.getElementById("progressFill");
+    const currentQuestionNumber = document.getElementById("currentQuestionNumber");
+    const currentCategory = document.getElementById("currentCategory");
+    
+    // プログレス表示を更新する関数
+    function updateProgress() {
+      // 質問番号の更新（1-20表示）
+      currentQuestionNumber.textContent = currentQuestionIndex + 1;
+      
+      // プログレスバーの幅を更新（%）
+      const progressPercent = (currentQuestionIndex / questions.length) * 100;
+      progressFill.style.width = `${progressPercent}%`;
+      
+      // カテゴリ名の更新
+      if (currentQuestionIndex < questions.length) {
+        const groupId = questions[currentQuestionIndex].group;
+        currentCategory.textContent = groupNames[groupId] || `グループ${groupId}`;
+      }
+    }
+    
+    // 質問を表示する関数
+    function showQuestion() {
+      try {
+        // インデックスが範囲内かチェック
+        if (currentQuestionIndex >= questions.length) {
+          finishQuiz();
+          return;
+        }
+        
+        // プログレス表示を更新
+        updateProgress();
+        
+        showDebug(`質問表示: ${currentQuestionIndex + 1}問目表示中`);
+        
+        // 表示領域をクリア
+        quizArea.innerHTML = "";
+        
+        // 安全なチェックを追加：カテゴリー見出しを表示（初回または前問とグループが変わったとき）
+        const currentQuestion = questions[currentQuestionIndex];
+        
+        // 現在の質問が正しいかチェック
+        if (!currentQuestion) {
+          showDebug(`エラー: 質問データが存在しません (index: ${currentQuestionIndex})`);
+          document.getElementById('emergencyNav').style.display = 'block';
+          return;
+        }
+        
+        // グループチェック
+        const currentGroup = currentQuestion.group;
+        const previousGroup = currentQuestionIndex > 0 ? questions[currentQuestionIndex - 1]?.group : null;
+        
+        if (currentQuestionIndex === 0 || previousGroup !== currentGroup) {
+          const categoryHeader = document.createElement("div");
+          categoryHeader.className = "category-header animated";
+          
+          // グループ名が存在するかチェック
+          const groupName = groupNames[currentGroup] || `グループ${currentGroup}`;
+          categoryHeader.textContent = groupName;
+          
+          quizArea.appendChild(categoryHeader);
+        }
+        
+        // ドットナビゲーションを追加
+        const dotNavigation = document.createElement("div");
+        dotNavigation.className = "dot-navigation";
+        
+        // カテゴリごとの質問数を計算
+        const categoryQuestionsCount = questions.filter(q => q.group === currentGroup).length;
+        
+        // 現在のカテゴリ内での質問インデックスを計算
+        const categoryStart = questions.findIndex(q => q.group === currentGroup);
+        const categoryCurrentIndex = currentQuestionIndex - categoryStart;
+        
+        // ドットを生成
+        for (let i = 0; i < categoryQuestionsCount; i++) {
+          const dot = document.createElement("div");
+          dot.className = `dot ${i === categoryCurrentIndex ? 'active' : ''}`;
+          dotNavigation.appendChild(dot);
+        }
+        quizArea.appendChild(dotNavigation);
+        
+        // 質問カードを表示
+        const card = document.createElement("div");
+        card.className = "card animated";
+        card.innerHTML = `<h2>${currentQuestion.text}</h2>`;
+        
+        const btnYes = document.createElement("div");
+        btnYes.className = "option-card";
+        btnYes.textContent = "はい";
+        btnYes.addEventListener("click", function() {
+          answers.push(true);
+          card.style.animation = "fadeOutShrink 0.3s ease-out forwards";
+          setTimeout(() => { 
+            currentQuestionIndex++; 
+            showQuestion(); 
+          }, 300);
+        });
+        
+        const btnNo = document.createElement("div");
+        btnNo.className = "option-card";
+        btnNo.textContent = "いいえ";
+        btnNo.addEventListener("click", function() {
+          answers.push(false);
+          card.style.animation = "fadeOutShrink 0.3s ease-out forwards";
+          setTimeout(() => { 
+            currentQuestionIndex++; 
+            showQuestion(); 
+          }, 300);
+        });
+        
+        card.appendChild(btnYes);
+        card.appendChild(btnNo);
+        quizArea.appendChild(card);
+      } catch (error) {
+        showDebug(`エラー発生: ${error.message}`);
+        // エラーが発生した場合は緊急ナビゲーションを表示
+        document.getElementById('emergencyNav').style.display = 'block';
+      }
+    }
+    
+    // 質問終了時の処理
+    function finishQuiz() {
+      try {
+        showDebug("全質問回答完了、回答を保存します");
+        
+        // プログレスバーを100%に
+        progressFill.style.width = '100%';
+        currentQuestionNumber.textContent = questions.length;
+        
+        // 回答をlocalStorageに保存
+        localStorage.setItem("typeAnswers", JSON.stringify(answers));
+        showDebug(`回答を保存しました: ${answers.length}個の回答`);
+        
+        // 「診断結果を計算中...」メッセージを表示
+        const finishCard = document.createElement("div");
+        finishCard.className = "card animated";
+        finishCard.innerHTML = `
+          <h2>診断完了！</h2>
+          <p style="margin-bottom:20px;">あなたの回答を分析しています...</p>
+          <div class="spinner" style="margin:0 auto 20px; width:40px; height:40px; border:4px solid #f3f3f3; border-top:4px solid var(--primary-color); border-radius:50%; animation:spin 1s linear infinite;"></div>
+        `;
+        quizArea.appendChild(finishCard);
+        
+        // loading.htmlへ遷移（少し遅延させる）
+        showDebug("まもなくloading.htmlへ遷移します...");
+        setTimeout(() => {
+          showDebug("loading.htmlへ遷移します");
+          window.location.href = "loading.html";
+        }, 2000);
+        
+        // 遷移が失敗した場合のバックアップ
+        setTimeout(() => {
+          if (document.visibilityState === "visible") {
+            showDebug("遷移タイムアウト、緊急ナビゲーションを表示します");
+            document.getElementById('emergencyNav').style.display = 'block';
+          }
+        }, 5000);
+      } catch (error) {
+        showDebug(`エラー発生: ${error.message}`);
+        alert("エラーが発生しました。もう一度お試しください。");
+        document.getElementById('emergencyNav').style.display = 'block';
+      }
+    }
+    
+    // 初期化処理
+    window.onload = function() {
+      try {
+        showDebug("quiz.htmlを読み込み中...");
+        
+        // 質問データのチェック
+        if (!Array.isArray(questions) || questions.length === 0) {
+          showDebug("エラー: 質問データが正しく定義されていません");
+          document.getElementById('emergencyNav').style.display = 'block';
+          return;
+        }
+        
+        // 質問表示を少し遅延させる（DOM完全読み込み待ち）
+        setTimeout(() => {
+          showQuestion();
+        }, 500);
+        
+        // フォールバック：10秒後に緊急ナビゲーションを表示
+        setTimeout(() => {
+          if (quizArea.children.length <= 1) {
+            showDebug("質問表示に問題がある可能性があります");
+            document.getElementById('emergencyNav').style.display = 'block';
+          }
+        }, 10000);
+      } catch (error) {
+        showDebug(`初期化エラー: ${error.message}`);
+        document.getElementById('emergencyNav').style.display = 'block';
+      }
+    };
+  </script>
+</body>
+</html>
