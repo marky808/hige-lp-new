@@ -172,17 +172,15 @@
         <li>最新の診断ツールや役立つコンテンツをお届け</li>
       </ul>
     </div>
-    
-    <!-- QRコードとLINE ID追加 -->
+      <!-- QRコードのみ表示 -->
     <div class="qr-container">
-      <p>以下のQRコードをスキャンするか、LINE IDで検索してください</p>
+      <p>以下のQRコードをスキャンしてください</p>
       <img src="./images/hige-qr.png" alt="LINE公式アカウントQRコード" class="qr-code">
-      <p class="line-id">LINE ID: @money_adviserjp</p>
     </div>
     
-    <button id="lineAddButton" class="line-button">
-      <i class="fab fa-line"></i> LINE友だち追加
-    </button>
+    <a href="https://line.me/R/ti/p/@money_adviserjp" target="_blank" class="line-button" id="lineAddButton">
+      <i class="fab fa-line"></i> LINE友達登録はこちら
+    </a>
     <button id="lineCompleteButton" class="line-button complete-button">
       <i class="fas fa-check"></i> 登録完了！結果を見る
     </button>
@@ -194,17 +192,11 @@
   <script>
     // LocalStorageキー
     const LINE_REGISTERED_KEY = 'line_registered';
-    
-    // LINE友達追加ボタン
-    document.getElementById('lineAddButton').addEventListener('click', function() {
-      // LINE友達追加のURLを開く（実際のLINE URLに変更）
-      window.open('https://line.me/R/ti/p/@money_adviserjp', '_blank');
-      
-      // 8秒後に完了ボタンを表示
-      setTimeout(() => {
-        document.getElementById('lineCompleteButton').style.display = 'inline-flex';
-      }, 8000);
-    });
+      // LINE友達追加ボタン - リンクに変更したので別途クリックハンドラは不要
+    // 8秒後に完了ボタンを表示する処理だけ残す
+    setTimeout(() => {
+      document.getElementById('lineCompleteButton').style.display = 'inline-flex';
+    }, 8000);
     
     // 登録完了ボタンのイベントリスナー
     document.getElementById('lineCompleteButton').addEventListener('click', function() {
