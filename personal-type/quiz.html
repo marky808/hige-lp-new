@@ -365,12 +365,8 @@
         `;
         quizArea.appendChild(finishCard);
         
-        // loading.htmlへ遷移（少し遅延させる）
-        showDebug("まもなくloading.htmlへ遷移します...");
-        setTimeout(() => {
-          showDebug("loading.htmlへ遷移します");
-          window.location.href = "loading.html";
-        }, 2000);
+        // 質問が終わったらLINE登録フローへ
+        window.location.href = "loading.html";
         
         // 遷移が失敗した場合のバックアップ
         setTimeout(() => {

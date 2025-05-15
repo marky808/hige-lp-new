@@ -9,149 +9,212 @@
   })(window,document,'script','dataLayer','GTM-KZGT7CGS');</script>
   <!-- End Google Tag Manager -->
   <meta charset="UTF-8">
-  <title>診断中...</title>
+  <title>LINE友達登録</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary-color: #00c300;
-      --background-color: #eef2f6;
+      --primary-dark: #009a24;
+      --background-gradient: linear-gradient(135deg, #e0f7e9 0%, #c8f0d8 100%);
+      --card-bg: #fff;
+      --shadow: 0 8px 32px rgba(0,0,0,0.12);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: var(--background-color);
+      background: var(--background-gradient);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
       color: var(--primary-color);
+      padding: 20px;
+    }
+    .loading-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 40px 32px 32px 32px;
+      max-width: 400px;
+      width: 95%;
+      text-align: center;
+      position: relative;
+      animation: fadeInUp 0.8s cubic-bezier(.39,.575,.565,1) forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .spinner {
-      width: 60px;
-      height: 60px;
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid var(--primary-color);
+      width: 70px;
+      height: 70px;
+      border: 7px solid #e0f7e9;
+      border-top: 7px solid var(--primary-color);
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin-bottom: 20px;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .loading-text { font-size: 1.2rem; }
-    .fade-in { animation: fadeIn 0.8s ease-out forwards; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* デバッグ情報用のスタイル */
-    .debug-info {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 0.8rem;
+    .loading-text {
+      font-size: 1.25rem;
+      color: var(--primary-dark);
+      margin-bottom: 18px;
+      letter-spacing: 0.02em;
     }
-    
-    /* 緊急用のボタン */
-    .emergency-links {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: none;
-    }
-    .emergency-links a {
-      display: block;
-      margin-top: 10px;
-      background: rgba(255,255,255,0.8);
+    .line-icon {
+      font-size: 2.5rem;
       color: var(--primary-color);
-      border: 1px solid var(--primary-color);
-      padding: 5px 15px;
-      text-decoration: none;
-      border-radius: 4px;
+      margin-bottom: 10px;
     }
-    .emergency-links a:hover {
-      background: white;
+    .subtitle {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 18px;
+    }
+    .description {
+      color: #666;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+    .line-benefits {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      text-align: left;
+      font-size: 0.98rem;
+    }
+    .line-benefits h3 {
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .line-benefits ul {
+      padding-left: 18px;
+    }
+    .line-benefits li {
+      margin-bottom: 7px;
+      color: #555;
+    }
+    .qr-container {
+      margin: 18px 0 10px 0;
+      padding: 10px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .qr-code {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .line-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 13px 28px;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.09);
+      transition: all 0.3s;
+      margin-bottom: 12px;
+      margin-top: 8px;
+      text-decoration: none;
+    }
+    .line-button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .line-button i {
+      font-size: 1.3rem;
+      margin-right: 7px;
+    }
+    .complete-button {
+      display: none;
+      background-color: #555;
+    }
+    .complete-button:hover {
+      background-color: #444;
+    }
+    .already-registered {
+      color: #777;
+      font-size: 0.92rem;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .already-registered:hover {
+      color: #555;
     }
   </style>
 </head>
-<body class="fade-in">
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZGT7CGS"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
-  <div class="spinner"></div>
-  <div class="loading-text">診断中...</div>
-  
-  <!-- デバッグ情報 -->
-  <div class="debug-info" id="debugInfo">デバッグ情報を読み込み中...</div>
-  
-  <!-- 緊急用のリンク -->
-  <div class="emergency-links" id="emergencyLinks">
-    <a href="line-register.html">LINE登録画面へ</a>
-    <a href="result.html">診断結果画面へ</a>
+<body>
+  <div class="loading-card">
+    <div class="spinner"></div>
+    <div class="loading-text">診断結果を生成中です…</div>
+    <i class="fab fa-line line-icon"></i>
+    <h1>診断結果を見るには</h1>
+    <p class="subtitle">LINE友達登録が必要です</p>
+    <div class="description">
+      あなたの診断結果を表示するには、下記のQRコードからLINE友達登録を行ってください。
+    </div>
+    <div class="line-benefits">
+      <h3>LINE登録のメリット</h3>
+      <ul>
+        <li>診断結果の詳細な解説を受け取れます</li>
+        <li>あなたのタイプに特化したアドバイスを定期配信</li>
+        <li>無料でのフォローアップ相談が可能に</li>
+        <li>最新の診断ツールや役立つコンテンツをお届け</li>
+      </ul>
+    </div>
+    <div class="qr-container">
+      <p>以下のQRコードをスキャンしてください</p>
+      <img src="images/hige-qr.png" alt="LINE公式アカウントQRコード" class="qr-code">
+    </div>
+    <a href="https://line.me/R/ti/p/@427cbszb" target="_blank" class="line-button" id="lineAddButton">
+      <i class="fab fa-line"></i> LINE友達登録はこちら
+    </a>
+    <button id="lineCompleteButton" class="line-button complete-button">
+      <i class="fas fa-check"></i> 登録完了！結果を見る
+    </button>
+    <div>
+      <a href="#" class="already-registered" id="alreadyRegistered">すでに登録されている方はこちら</a>
+    </div>
   </div>
-  
   <script>
-    // デバッグモードの設定
-    const DEBUG_MODE = true;
-    
-    // デバッグ情報を表示する関数
-    function showDebugInfo(message) {
-      const debugElement = document.getElementById('debugInfo');
-      debugElement.style.display = 'block';
-      debugElement.innerHTML = message;
-      console.log(message); // コンソールにも出力
-    }
-    
-    // LINE登録状態をチェック
+    // LocalStorageキー
     const LINE_REGISTERED_KEY = 'line_registered';
-    
-    function isLineRegistered() {
-      const status = localStorage.getItem(LINE_REGISTERED_KEY) === 'registered';
-      showDebugInfo(`LINE登録状態: ${status ? '登録済み' : '未登録'}<br>
-                    LINE_REGISTERED_KEY: ${localStorage.getItem(LINE_REGISTERED_KEY)}`);
-      return status;
+    // 8秒後に完了ボタンを表示
+    setTimeout(() => {
+      document.getElementById('lineCompleteButton').style.display = 'inline-flex';
+    }, 8000);
+    // 登録完了ボタンのイベントリスナー
+    document.getElementById('lineCompleteButton').addEventListener('click', function() {
+      localStorage.setItem(LINE_REGISTERED_KEY, 'registered');
+      window.location.href = 'result.html';
+    });
+    // すでに登録済みリンク
+    document.getElementById('alreadyRegistered').addEventListener('click', function(e) {
+      e.preventDefault();
+      localStorage.setItem(LINE_REGISTERED_KEY, 'registered');
+      window.location.href = 'result.html';
+    });
+    // ページ表示時に登録済みなら即リダイレクト
+    if (localStorage.getItem(LINE_REGISTERED_KEY) === 'registered') {
+      window.location.href = 'result.html';
     }
-
-    // 緊急リンクを表示（5秒後）
-    setTimeout(function() {
-      document.getElementById('emergencyLinks').style.display = 'block';
-      showDebugInfo('緊急リンクが表示されました。問題が解決しない場合はクリックしてください。');
-    }, 5000);
-
-    // ローディング後の遷移先を決定
-    setTimeout(function(){
-      try {
-        // LINE登録状態を確認
-        const isRegistered = isLineRegistered();
-        showDebugInfo(isRegistered ? '登録済み状態を検出' : '未登録状態を検出');
-        
-        // 登録状態に応じてページ遷移
-        if (isRegistered) {
-          showDebugInfo('登録済みユーザー → 結果ページへ遷移します');
-          // ページ遷移
-          window.location.href = "result.html";
-        } else {
-          showDebugInfo('未登録ユーザー → LINE登録ページへ遷移します');
-          // ページ遷移 (リダイレクト)
-          window.location.replace("line-register.html");
-        }
-      } catch (error) {
-        showDebugInfo(`エラーが発生しました: ${error.message}`);
-        // 緊急リンクをすぐに表示
-        document.getElementById('emergencyLinks').style.display = 'block';
-      }
-    }, 2000);
-
-    // フォールバック：遷移が失敗した場合のために10秒後に強制遷移
-    setTimeout(function() {
-      showDebugInfo('タイムアウト - 強制的に LINE 登録ページへ遷移します');
-      window.location.href = "line-register.html";
-    }, 10000);
   </script>
 </body>
 </html>
